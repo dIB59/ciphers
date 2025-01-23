@@ -9,10 +9,14 @@ func main() {
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 		'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 	}
-	ceaser("SOME HOW", 3, letters)
+	input := "SOMEHOW"
+	x := ceaser(input, 3, letters)
+	fmt.Println(x)
+	y := decrypt(x, 3, letters)
+	fmt.Println(y)
 }
 
-func ceaser(arg string, k int, letters []rune) {
+func ceaser(arg string, k int, letters []rune) string {
 	total := len(letters)
 
 	letterNumMap := make(map[rune]int)
@@ -23,7 +27,6 @@ func ceaser(arg string, k int, letters []rune) {
 		numLetterMap[i] = letter
 	}
 
-	normal := []rune{}
 	ciphered := []rune{}
 
 	for _, c := range arg {
@@ -31,10 +34,31 @@ func ceaser(arg string, k int, letters []rune) {
 		cipheredNum := (letterNum + k) % total
 		cipheredLetter := numLetterMap[cipheredNum]
 		ciphered = append(ciphered, cipheredLetter)
-		normal = append(normal, c)
+	}
+	return string(ciphered)
+}
+
+func decrypt(text string, k int, letters []rune) string {
+	res := []rune{}
+	total := len(letters)
+
+	letterNumMap := make(map[rune]int)
+	numLetterMap := make(map[int]rune)
+
+	for i, letter := range letters {
+		letterNumMap[letter] = i
+		numLetterMap[i] = letter
 	}
 
-	fmt.Println(string(normal))
-	fmt.Println(string(ciphered))
+	for _, c := range text {
+		letterNum := letterNumMap[c]
+		decipheredNum := (letterNum - k)
+		if decipheredNum < 0 {
+			decipheredNum = (decipheredNum * -1) % total
+		}
+		cipheredLetter := numLetterMap[decipheredNum]
+		res = append(res, cipheredLetter)
 
+	}
+	return string(res)
 }
